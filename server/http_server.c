@@ -58,7 +58,7 @@ void handleHttpRequest(int clientSocket, const char* clientIP) {
                 createBucket(bucket);
                 uploadObject(bucket, object, body, bytesRead - (body - buffer));
                 snprintf(response, BUFFER_SIZE, "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n");
-                logMessage(LOG_LEVEL_INFO, "[Client: %s] Object uploaded successfully. Bucket: %s. Object: %s", clientIP, bucket, object);
+                logMessage(LOG_LEVEL_INFO, "[Client: %s] Object uploaded successfully. [Bucket: %s]. [Object: %s]", clientIP, bucket, object);
             } else {
                 snprintf(response, BUFFER_SIZE, "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n");
                 logMessage(LOG_LEVEL_ERROR, "[Client: %s] Invalid request body.", clientIP);
@@ -75,22 +75,22 @@ void handleHttpRequest(int clientSocket, const char* clientIP) {
                 send(clientSocket, response, strlen(response), 0);
                 send(clientSocket, data, size, 0);
                 free(data);
-                logMessage(LOG_LEVEL_INFO, "[Client: %s] Object downloaded successfully. Bucket: %s. Object: %s", clientIP, bucket, object);
+                logMessage(LOG_LEVEL_INFO, "[Client: %s] Object downloaded successfully. [Bucket: %s]. [Object: %s]", clientIP, bucket, object);
                 close(clientSocket);
                 return;
             } else {
                 snprintf(response, BUFFER_SIZE, "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n");
-                logMessage(LOG_LEVEL_ERROR, "[Client: %s] Object not found. Bucket: %s. Object: %s", clientIP, bucket, object);
+                logMessage(LOG_LEVEL_ERROR, "[Client: %s] Object not found. [Bucket: %s]. [Object: %s]", clientIP, bucket, object);
             }
         } else if (sscanf(path, "/%[^/]/%s", bucket) == 1) { 
             char* objects = listObjects(bucket);
             if (objects) {
                 snprintf(response, BUFFER_SIZE, "HTTP/1.1 200 OK\r\nContent-Length: %zu\r\n\r\n%s", strlen(objects), objects);
                 send(clientSocket, response, strlen(response), 0);
-                logMessage(LOG_LEVEL_INFO, "[Client: %s] List of objects retreived. Bucket: %s", clientIP, bucket);
+                logMessage(LOG_LEVEL_INFO, "[Client: %s] List of objects retreived. [Bucket: %s]", clientIP, bucket);
                 free(objects);
             } else {
-                logMessage(LOG_LEVEL_ERROR, "[Client: %s] Bucket not found. Bucket: %s", clientIP, bucket);
+                logMessage(LOG_LEVEL_ERROR, "[Client: %s] Bucket not found. [Bucket: %s]", clientIP, bucket);
                 snprintf(response, BUFFER_SIZE, "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n");
             }
         }
@@ -99,7 +99,7 @@ void handleHttpRequest(int clientSocket, const char* clientIP) {
         if (sscanf(path, bucket, object) == 2) {
             deleteObject(bucket, object);
             snprintf(response, BUFFER_SIZE, "HTTP/1.1 204 No Content\r\nContent-Length: 0\r\n");
-            logMessage(LOG_LEVEL_INFO, "[Client: %s] Object deleted succesfully. Bucket: %s. Object: %s", clientIP, bucket, object);
+            logMessage(LOG_LEVEL_INFO, "[Client: %s] Object deleted succesfully. [Bucket: %s]. [Object: %s]", clientIP, bucket, object);
         } else {
             snprintf(response, BUFFER_SIZE, "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n");
             logMessage(LOG_LEVEL_ERROR, "[Client: %s] Invalid delete request.", clientIP);

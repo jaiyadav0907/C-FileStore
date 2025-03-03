@@ -28,6 +28,7 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS) $(TARGET)
 	rm -f *.log
+	rm -rf storage
 
 # Phony targets
 .PHONY: all clean
