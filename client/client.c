@@ -20,7 +20,7 @@ int connectToServer(const char* ipAddress, int port) {
 
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
-    inet_pton(AF_INET, ipAddress, &server_address.sin_addr);
+    inet_pton(AF_INET, ipAddress, &server_address.sin_addr); // convert string ipaddress to its server-address object representation
 
     if (connect(socket_fd, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
         perror("Connection to server failed");
@@ -46,7 +46,7 @@ char* receiveResponse() {
         perror("Failed to receive response");
         return NULL;
     }
-    return buffer
+    return buffer;
 }
 
 void closeConnection() {
